@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX `referenceId_idx` ON `recommendedModule` (`referenceId`);

@@ -6,7 +6,8 @@ import { CarouselSection } from '@wsh-2025/client/src/features/recommended/compo
 import { JumbotronSection } from '@wsh-2025/client/src/features/recommended/components/JumbotronSection';
 
 interface Props {
-  module: ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>>;
+  // module: ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>>;
+  module: {};
 }
 
 export const RecommendedSection = ({ module }: Props) => {

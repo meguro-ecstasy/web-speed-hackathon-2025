@@ -1,0 +1,1 @@
+DROP INDEX `referenceId_idx`;

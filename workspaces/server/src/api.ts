@@ -469,38 +469,64 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     handler: async function getRecommendedModules(req, reply) {
       const database = getDatabase();
 
+      const now = performance.now();
       const modules = await database.query.recommendedModule.findMany({
+        columns: {
+          id: true,
+          type: true,
+        },
         orderBy(module, { asc }) {
           return asc(module.order);
         },
         where(module, { eq }) {
+          // TODO: referenceIdにindexを貼る
           return eq(module.referenceId, req.params.referenceId);
         },
         with: {
           items: {
+            columns: {
+              id: true,
+            },
             orderBy(item, { asc }) {
               return asc(item.order);
             },
             with: {
               series: {
-                with: {
-                  episodes: {
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
-                    },
-                  },
+                columns: {
+                  id: true,
+                  title: true,
+                  thumbnailUrl: true,
                 },
+                // with: {
+                //   episodes: {
+                //     orderBy(episode, { asc }) {
+                //       return asc(episode.order);
+                //     },
+                //   },
+                // },
               },
               episode: {
+                columns: {
+                  id: true,
+                  title: true,
+                  description: true,
+                  thumbnailUrl: true,
+                  premium: true,
+                },
                 with: {
                   series: {
-                    with: {
-                      episodes: {
-                        orderBy(episode, { asc }) {
-                          return asc(episode.order);
-                        },
-                      },
+                    columns: {
+                      id: true,
+                      title: true,
+                      thumbnailUrl: true,
                     },
+                    // with: {
+                    //   episodes: {
+                    //     orderBy(episode, { asc }) {
+                    //       return asc(episode.order);
+                    //     },
+                    //   },
+                    // },
                   },
                 },
               },
@@ -508,6 +534,8 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
+      const end = performance.now();
+      console.log(`${end - now}ms`);
       return reply.code(200).send(modules);
     },
   });
